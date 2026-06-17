@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>DrinkParty - RondaCero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/drinkparty/style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="screen-home" class="screen active">
+      <div class="home-container">
+        <div class="logo-area">
+          <div class="logo-icon">🍹</div>
+          <h1 class="logo-title">DrinkParty</h1>
+          <p class="logo-subtitle">¡La fiesta empieza aquí!</p>
+        </div>
+        <div class="glass-card join-card">
+          <h2>Unirse a la fiesta</h2>
+          <div class="form-group">
+            <label for="player-name">Tu nombre</label>
+            <input type="text" id="player-name" placeholder="¿Cómo te llamas?" maxlength="20" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Elige tu avatar</label>
+            <div class="avatar-grid" id="avatar-grid">
+              <button class="avatar-option" data-avatar="🎉">🎉</button>
+              <button class="avatar-option" data-avatar="🔥">🔥</button>
+              <button class="avatar-option" data-avatar="🍺">🍺</button>
+              <button class="avatar-option" data-avatar="🎵">🎵</button>
+              <button class="avatar-option" data-avatar="💃">💃</button>
+              <button class="avatar-option" data-avatar="🕺">🕺</button>
+              <button class="avatar-option" data-avatar="👑">👑</button>
+              <button class="avatar-option" data-avatar="🦄">🦄</button>
+              <button class="avatar-option" data-avatar="🐉">🐉</button>
+              <button class="avatar-option" data-avatar="🌮">🌮</button>
+              <button class="avatar-option" data-avatar="🎸">🎸</button>
+              <button class="avatar-option" data-avatar="🚀">🚀</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="room-code">Código de sala</label>
+            <input type="text" id="room-code" placeholder="Ej: FIESTA123" maxlength="12" autocomplete="off">
+          </div>
+          <button class="btn btn-primary btn-lg" id="btn-join">¡Entrar a la fiesta!</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-lobby" class="screen">
+      <div class="lobby-container">
+        <div class="lobby-header">
+          <h2>Sala de Espera</h2>
+          <div class="room-code-display">
+            <span class="room-label">Código:</span>
+            <span class="room-code-value" id="lobby-room-code"></span>
+          </div>
+        </div>
+        <div class="glass-card qr-card">
+          <div id="qr-code" class="qr-placeholder">
+            <span>📱</span>
+            <p>Comparte el código</p>
+          </div>
+        </div>
+        <div class="glass-card players-card">
+          <h3>Jugadores (<span id="player-count">0</span>)</h3>
+          <div class="players-list" id="players-list"></div>
+        </div>
+        <div class="lobby-actions">
+          <button class="btn btn-primary btn-lg" id="btn-start">🎮 ¡Empezar!</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-game" class="screen">
+      <div class="game-container">
+        <div class="game-header">
+          <div class="round-indicator">
+            <span class="round-label">Ronda</span>
+            <span class="round-number" id="round-number">1</span>
+          </div>
+          <div class="mode-badge" id="mode-badge">Trivia</div>
+          <div class="barra-colectiva">
+            <div class="barra-fill" id="barra-fill"></div>
+            <span class="barra-label">🍺 Barra Colectiva</span>
+          </div>
+        </div>
+        <div class="game-content" id="game-content"></div>
+        <div class="game-scores-mini" id="game-scores-mini"></div>
+      </div>
+    </div>
+
+    <div id="screen-results" class="screen">
+      <div class="results-container">
+        <h2 class="results-title">🏆 Resultados</h2>
+        <div class="podium" id="podium"></div>
+        <div class="glass-card ranking-card">
+          <h3>Ranking Completo</h3>
+          <div class="ranking-list" id="ranking-list"></div>
+        </div>
+        <div class="results-actions">
+          <button class="btn btn-primary" id="btn-next-round">Siguiente Ronda</button>
+          <button class="btn btn-secondary" id="btn-new-game">Nuevo Juego</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="glass-card modal-content" id="modal-content"></div>
+    </div>
+
+    <div class="chat-toggle" id="chat-toggle">💬</div>
+    <div class="chat-panel" id="chat-panel">
+      <div class="chat-header">
+        <h4>Chat de la Fiesta</h4>
+        <button class="chat-close" id="chat-close">✕</button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Escribe un mensaje..." maxlength="200" autocomplete="off">
+        <button class="btn btn-send" id="btn-send-chat">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/drinkparty/socket.io/socket.io.js"></script>
+  <script src="/drinkparty/app.js"></script>
+</body>
+</html>

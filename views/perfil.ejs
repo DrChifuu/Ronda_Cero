@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Mi Perfil</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    ::selection{background:#ffd23f;color:black}
+    .badge{transition:transform 0.2s}
+    .badge:hover{transform:scale(1.15) rotate(5deg)}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full">
+
+  <div class="flex items-center justify-between mb-margin">
+    <h1 class="font-headline-md text-headline-md text-primary-container">
+      <span class="material-symbols-outlined align-middle mr-2">person</span>MI PERFIL
+    </h1>
+    <a href="/dashboard" class="rough-border rough-shadow rough-button bg-surface-container-high text-on-surface font-label-bold px-4 py-2 uppercase">
+      <span class="material-symbols-outlined align-middle mr-1">arrow_back</span>Volver
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-margin">
+
+    <div class="lg:col-span-1">
+      <div class="paper-stack bg-surface-container-high rough-border rough-shadow-lg p-6 text-center" style="transform:rotate(-0.5deg)">
+        <div class="text-8xl mb-unit" id="profile-avatar"><%= typeof avatar !== 'undefined' ? avatar : '😎' %></div>
+        <h2 class="font-headline-md text-2xl text-primary-container" id="profile-name"><%= typeof playerName !== 'undefined' ? playerName : 'Jugador' %></h2>
+        <p class="font-body-sm text-on-surface-variant mt-1">
+          <span class="material-symbols-outlined align-middle" style="font-size:16px">calendar_today</span>
+          Miembro desde <span id="profile-date"><%= typeof fechaRegistro !== 'undefined' ? fechaRegistro : '—' %></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2 flex flex-col gap-margin">
+
+      <div>
+        <h3 class="font-label-bold text-on-surface-variant uppercase tracking-wider mb-chunky-gap">
+          <span class="material-symbols-outlined align-middle mr-1">bar_chart</span>Estadísticas Globales
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-chunky-gap">
+          <div class="bg-surface-container-high rough-border rough-shadow p-4 text-center">
+            <span class="material-symbols-outlined text-2xl text-primary-container">casino</span>
+            <p class="font-headline-md text-xl text-primary-container mt-1" id="stat-partidas">0</p>
+            <p class="font-bilingual-sub text-on-surface-variant">Partidas</p>
+          </div>
+          <div class="bg-surface-container-high rough-border rough-shadow p-4 text-center">
+            <span class="material-symbols-outlined text-2xl text-secondary">emoji_events</span>
+            <p class="font-headline-md text-xl text-secondary mt-1" id="stat-victorias">0</p>
+            <p class="font-bilingual-sub text-on-surface-variant">Victorias</p>
+          </div>
+          <div class="bg-surface-container-high rough-border rough-shadow p-4 text-center">
+            <span class="material-symbols-outlined text-2xl text-tertiary-fixed-dim">stars</span>
+            <p class="font-headline-md text-xl text-tertiary-fixed-dim mt-1" id="stat-puntos">0</p>
+            <p class="font-bilingual-sub text-on-surface-variant">Puntos</p>
+          </div>
+          <div class="bg-surface-container-high rough-border rough-shadow p-4 text-center">
+            <span class="material-symbols-outlined text-2xl text-primary-fixed">monetization_on</span>
+            <p class="font-headline-md text-xl text-primary-fixed mt-1" id="stat-monedas">0</p>
+            <p class="font-bilingual-sub text-on-surface-variant">Monedas</p>
+          </div>
+          <div class="bg-surface-container-high rough-border rough-shadow p-4 text-center">
+            <span class="material-symbols-outlined text-2xl text-error">sports_bar</span>
+            <p class="font-headline-md text-xl text-error mt-1" id="stat-tragos">0</p>
+            <p class="font-bilingual-sub text-on-surface-variant">Tragos</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-label-bold text-on-surface-variant uppercase tracking-wider mb-chunky-gap">
+          <span class="material-symbols-outlined align-middle mr-1">analytics</span>Estadísticas por Juego
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-chunky-gap">
+          <div class="bg-surface-container-high rough-border rough-shadow p-4">
+            <div class="flex items-center justify-between mb-unit">
+              <span class="font-label-bold text-on-surface">Trivia — % Aciertos</span>
+              <span class="font-label-bold text-primary-container" id="stat-trivia-pct">0%</span>
+            </div>
+            <div class="w-full h-4 bg-surface-container-lowest rough-border overflow-hidden">
+              <div id="bar-trivia" class="h-full bg-primary-container" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="bg-surface-container-high rough-border rough-shadow p-4">
+            <div class="flex items-center justify-between mb-unit">
+              <span class="font-label-bold text-on-surface">Retos — % Completados</span>
+              <span class="font-label-bold text-secondary" id="stat-retos-pct">0%</span>
+            </div>
+            <div class="w-full h-4 bg-surface-container-lowest rough-border overflow-hidden">
+              <div id="bar-retos" class="h-full bg-secondary" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-label-bold text-on-surface-variant uppercase tracking-wider mb-chunky-gap">
+          <span class="material-symbols-outlined align-middle mr-1">military_tech</span>Logros
+        </h3>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-chunky-gap" id="badges-grid">
+          <div class="badge bg-surface-container-high rough-border rough-shadow p-3 text-center opacity-40">
+            <span class="text-3xl block">🎯</span>
+            <p class="font-bilingual-sub text-on-surface-variant mt-1">Primera Partida</p>
+          </div>
+          <div class="badge bg-surface-container-high rough-border rough-shadow p-3 text-center opacity-40">
+            <span class="text-3xl block">🔥</span>
+            <p class="font-bilingual-sub text-on-surface-variant mt-1">Racha x5</p>
+          </div>
+          <div class="badge bg-surface-container-high rough-border rough-shadow p-3 text-center opacity-40">
+            <span class="text-3xl block">🧠</span>
+            <p class="font-bilingual-sub text-on-surface-variant mt-1">Trivia Master</p>
+          </div>
+          <div class="badge bg-surface-container-high rough-border rough-shadow p-3 text-center opacity-40">
+            <span class="text-3xl block">💪</span>
+            <p class="font-bilingual-sub text-on-surface-variant mt-1">Retos x10</p>
+          </div>
+          <div class="badge bg-surface-container-high rough-border rough-shadow p-3 text-center opacity-40">
+            <span class="text-3xl block">🏆</span>
+            <p class="font-bilingual-sub text-on-surface-variant mt-1">Campeón</p>
+          </div>
+          <div class="badge bg-surface-container-high rough-border rough-shadow p-3 text-center opacity-40">
+            <span class="text-3xl block">🎰</span>
+            <p class="font-bilingual-sub text-on-surface-variant mt-1">Suertudo</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="mt-margin">
+    <h3 class="font-label-bold text-on-surface-variant uppercase tracking-wider mb-chunky-gap">
+      <span class="material-symbols-outlined align-middle mr-1">history</span>Partidas Recientes
+    </h3>
+    <div class="bg-surface-container-high rough-border rough-shadow overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b-4 border-black bg-surface-container-lowest">
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-left">Fecha</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-left">Sala</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Posición</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Puntos</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Monedas</th>
+          </tr>
+        </thead>
+        <tbody id="history-body">
+          <tr><td colspan="5" class="px-4 py-6 text-center font-body-sm text-on-surface-variant">Sin partidas recientes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+(function() {
+  fetch('/api/perfil/stats')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data) return;
+      var g = data.global || {};
+      document.getElementById('stat-partidas').textContent = g.partidas || 0;
+      document.getElementById('stat-victorias').textContent = g.victorias || 0;
+      document.getElementById('stat-puntos').textContent = g.puntos || 0;
+      document.getElementById('stat-monedas').textContent = g.monedas || 0;
+      document.getElementById('stat-tragos').textContent = g.tragos || 0;
+
+      var pg = data.porJuego || {};
+      var triviaPct = pg.triviaPct || 0;
+      var retosPct = pg.retosPct || 0;
+      document.getElementById('stat-trivia-pct').textContent = triviaPct + '%';
+      document.getElementById('bar-trivia').style.width = triviaPct + '%';
+      document.getElementById('stat-retos-pct').textContent = retosPct + '%';
+      document.getElementById('bar-retos').style.width = retosPct + '%';
+
+      if (data.logros && data.logros.length > 0) {
+        var badgeEls = document.querySelectorAll('#badges-grid .badge');
+        data.logros.forEach(function(idx) {
+          if (badgeEls[idx]) badgeEls[idx].classList.remove('opacity-40');
+        });
+      }
+
+      var historyBody = document.getElementById('history-body');
+      var historial = data.historial || [];
+      if (historial.length === 0) {
+        historyBody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center font-body-sm text-on-surface-variant">Sin partidas recientes</td></tr>';
+      } else {
+        historyBody.innerHTML = historial.map(function(h) {
+          return '<tr class="border-b-2 border-black bg-surface-container-high">' +
+            '<td class="px-4 py-3 font-body-sm text-on-surface-variant">' + new Date(h.fecha).toLocaleDateString('es-CL') + '</td>' +
+            '<td class="px-4 py-3 font-body-sm text-on-surface">' + (h.codigo_sala || '—') + '</td>' +
+            '<td class="px-4 py-3 text-center font-label-bold text-primary-container">' + (h.posicion || '—') + '</td>' +
+            '<td class="px-4 py-3 text-center font-body-sm text-on-surface">' + (h.puntos || 0) + '</td>' +
+            '<td class="px-4 py-3 text-center font-label-bold text-secondary">' + (h.monedas || 0) + '</td>' +
+          '</tr>';
+        }).join('');
+      }
+    })
+    .catch(function() {});
+})();
+</script>
+
+</body>
+</html>

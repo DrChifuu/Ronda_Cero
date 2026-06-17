@@ -1,0 +1,14 @@
+CREATE INDEX IF NOT EXISTS idx_billetera_usuario ON billetera_local(id_usuario);
+CREATE INDEX IF NOT EXISTS idx_billetera_moneda ON billetera_local(id_moneda);
+CREATE INDEX IF NOT EXISTS idx_transaccion_billetera ON transaccion(id_billetera);
+CREATE INDEX IF NOT EXISTS idx_transaccion_fecha ON transaccion(fecha);
+CREATE INDEX IF NOT EXISTS idx_premio_local ON premio(id_local);
+CREATE INDEX IF NOT EXISTS idx_premio_activo ON premio(activo);
+CREATE INDEX IF NOT EXISTS idx_canje_usuario ON canje_premio(id_usuario);
+CREATE INDEX IF NOT EXISTS idx_canje_estado ON canje_premio(estado);
+CREATE INDEX IF NOT EXISTS idx_canje_premio ON canje_premio(id_premio);
+CREATE INDEX IF NOT EXISTS idx_sesion_codigo ON sesion_juego(codigo_sala);
+CREATE INDEX IF NOT EXISTS idx_sesion_estado ON sesion_juego(estado);
+CREATE INDEX IF NOT EXISTS idx_participacion_sesion ON participacion_sesion(id_sesion);
+CREATE INDEX IF NOT EXISTS idx_participacion_usuario ON participacion_sesion(id_usuario);
+CREATE INDEX IF NOT EXISTS idx_usuario_email ON usuario(email);

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Lobby</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    .game-card{transition:transform 0.3s}
+    .game-card:hover{transform:rotate(0deg) scale(1.05)!important}
+    ::selection{background:#ffd23f;color:black}
+    .bar-fill{transition:width 0.5s ease;background:linear-gradient(90deg,#ffd23f,#ef476f)}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full">
+  <div class="text-center mb-margin">
+    <p class="font-body-sm text-on-surface-variant uppercase tracking-wider mb-unit">Código de sala</p>
+    <h1 id="room-code" class="font-headline-xl text-headline-xl text-primary-fixed tracking-wider"><%= codigo %></h1>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-margin items-start">
+
+    <div class="flex flex-col items-center gap-margin">
+      <div class="paper-stack bg-surface-container-high rough-border rough-shadow p-6 w-full max-w-sm" style="transform: rotate(0.5deg);">
+        <p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-center mb-unit">
+          <span class="material-symbols-outlined align-middle mr-1">qr_code_2</span>Escanea para unirte
+        </p>
+        <div id="qr-code" class="w-48 h-48 mx-auto bg-surface-container-low rough-border flex items-center justify-center">
+          <span class="material-symbols-outlined text-6xl text-on-surface-variant opacity-30">qr_code_2</span>
+        </div>
+        <p class="font-body-sm text-on-surface-variant text-center mt-unit">Comparte el código con tus amigos</p>
+      </div>
+
+      <div class="flex gap-chunky-gap w-full max-w-sm">
+        <button id="btn-iniciar"
+                class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold text-lg px-6 py-4 uppercase tracking-wide flex-1 hidden">
+          <span class="material-symbols-outlined align-middle mr-1">play_arrow</span>
+          INICIAR PARTIDA
+        </button>
+        <a href="/dashboard"
+           class="rough-border rough-shadow rough-button bg-surface-dim text-on-surface font-label-bold px-6 py-4 uppercase tracking-wide text-center">
+          <span class="material-symbols-outlined align-middle mr-1">logout</span>
+          SALIR
+        </a>
+      </div>
+    </div>
+
+    <div class="paper-stack bg-surface-container-high rough-border rough-shadow p-6" style="transform: rotate(-0.5deg);">
+      <h2 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-chunky-gap">
+        <span class="material-symbols-outlined align-middle mr-1">group</span>
+        Jugadores (<span id="player-count">0</span>)
+      </h2>
+      <div id="players-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-chunky-gap">
+        <div class="bg-surface-container rough-border p-3 text-center animate-pulse">
+          <span class="text-3xl">⏳</span>
+          <p class="font-body-sm text-on-surface-variant mt-1">Esperando...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function() {
+  const codigo = '<%= codigo %>';
+  const socket = io();
+  const playersGrid = document.getElementById('players-grid');
+  const playerCount = document.getElementById('player-count');
+  const btnIniciar = document.getElementById('btn-iniciar');
+
+  function renderPlayers(players) {
+    playerCount.textContent = players.length;
+    if (players.length === 0) {
+      playersGrid.innerHTML = '<div class="bg-surface-container rough-border p-3 text-center animate-pulse"><span class="text-3xl">⏳</span><p class="font-body-sm text-on-surface-variant mt-1">Esperando...</p></div>';
+      return;
+    }
+    playersGrid.innerHTML = players.map(function(p, i) {
+      const rotation = (i % 2 === 0 ? -1 : 1) * (Math.random() * 2 + 0.5);
+      return '<div class="bg-surface-container rough-border p-3 text-center" style="transform: rotate(' + rotation.toFixed(1) + 'deg);">' +
+        '<span class="text-3xl">' + (p.avatar || '🎮') + '</span>' +
+        '<p class="font-label-bold text-on-surface mt-1 truncate">' + p.nombre + '</p>' +
+        (p.isHost ? '<span class="font-bilingual-sub text-primary-container">HOST</span>' : '') +
+        '</div>';
+    }).join('');
+  }
+
+  socket.emit('join_room', { codigo: codigo });
+
+  socket.on('room_state', function(data) {
+    renderPlayers(data.players);
+    if (data.isHost) {
+      btnIniciar.classList.remove('hidden');
+    }
+  });
+
+  socket.on('player_joined', function(data) {
+    renderPlayers(data.players);
+  });
+
+  socket.on('player_left', function(data) {
+    renderPlayers(data.players);
+  });
+
+  socket.on('game_started', function(data) {
+    window.location.href = '/sala/' + codigo + '/juego';
+  });
+
+  socket.on('error', function(data) {
+    alert(data.message || 'Error en la sala');
+  });
+
+  btnIniciar.addEventListener('click', function() {
+    btnIniciar.disabled = true;
+    btnIniciar.textContent = 'INICIANDO...';
+    socket.emit('start_game', { codigo: codigo });
+  });
+})();
+</script>
+
+</body>
+</html>

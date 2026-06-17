@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Trivia</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    .game-card{transition:transform 0.3s}
+    .game-card:hover{transform:rotate(0deg) scale(1.05)!important}
+    ::selection{background:#ffd23f;color:black}
+    .bar-fill{transition:width 0.5s ease;background:linear-gradient(90deg,#ffd23f,#ef476f)}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full">
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-margin">
+
+    <div class="lg:col-span-3 flex flex-col gap-margin">
+
+      <div class="flex items-center justify-between">
+        <div class="bg-surface-container-high rough-border rough-shadow px-4 py-2">
+          <span class="font-label-bold text-on-surface-variant">RONDA</span>
+          <span id="round-display" class="font-headline-md text-xl text-primary-container ml-2">1/20</span>
+        </div>
+        <div id="timer-box" class="bg-surface-container-high rough-border rough-shadow px-6 py-2 text-center">
+          <span class="material-symbols-outlined align-middle text-secondary mr-1">timer</span>
+          <span id="timer-display" class="font-headline-xl text-4xl text-secondary">20</span>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-high rough-border p-4">
+        <div class="flex items-center justify-between mb-unit">
+          <span class="font-label-bold text-on-surface-variant">BARRA COLECTIVA</span>
+          <span id="bar-percent" class="font-label-bold text-primary-container">0%</span>
+        </div>
+        <div class="w-full h-6 bg-surface-container-lowest rough-border overflow-hidden">
+          <div id="bar-fill" class="bar-fill h-full" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="paper-stack bg-surface-container-high rough-border rough-shadow-lg p-8 text-center" style="transform: rotate(-0.3deg);">
+        <p id="question-text" class="font-headline-md text-headline-md text-on-surface">
+          Esperando pregunta...
+        </p>
+      </div>
+
+      <div id="answers-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-chunky-gap">
+        <button data-answer="A" class="answer-btn rough-border rough-shadow rough-button bg-surface-container-high p-5 text-left transition-colors">
+          <span class="font-label-bold text-primary-container text-xl mr-2">A</span>
+          <span class="answer-text font-body-lg text-on-surface">—</span>
+        </button>
+        <button data-answer="B" class="answer-btn rough-border rough-shadow rough-button bg-surface-container-high p-5 text-left transition-colors">
+          <span class="font-label-bold text-secondary text-xl mr-2">B</span>
+          <span class="answer-text font-body-lg text-on-surface">—</span>
+        </button>
+        <button data-answer="C" class="answer-btn rough-border rough-shadow rough-button bg-surface-container-high p-5 text-left transition-colors">
+          <span class="font-label-bold text-tertiary text-xl mr-2">C</span>
+          <span class="answer-text font-body-lg text-on-surface">—</span>
+        </button>
+        <button data-answer="D" class="answer-btn rough-border rough-shadow rough-button bg-surface-container-high p-5 text-left transition-colors">
+          <span class="font-label-bold text-error text-xl mr-2">D</span>
+          <span class="answer-text font-body-lg text-on-surface">—</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-margin">
+      <div class="bg-surface-container-high rough-border rough-shadow p-4 max-h-64 overflow-y-auto">
+        <h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-unit">
+          <span class="material-symbols-outlined align-middle mr-1">leaderboard</span>Ranking
+        </h3>
+        <ul id="ranking-list" class="flex flex-col gap-unit">
+          <li class="font-body-sm text-on-surface-variant text-center py-2">Sin datos</li>
+        </ul>
+      </div>
+
+      <div class="bg-surface-container-high rough-border rough-shadow p-4">
+        <button id="chat-toggle" class="w-full flex items-center justify-between font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">
+          <span><span class="material-symbols-outlined align-middle mr-1">chat</span>Chat</span>
+          <span id="chat-arrow" class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div id="chat-area" class="hidden mt-unit">
+          <div id="chat-messages" class="h-40 overflow-y-auto bg-surface-container-lowest rough-border p-2 mb-unit flex flex-col gap-1">
+          </div>
+          <form id="chat-form" class="flex gap-unit">
+            <input type="text" id="chat-input" maxlength="200" placeholder="Escribe..."
+                   class="flex-1 bg-surface-container-low rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant"/>
+            <button type="submit" class="rough-border rough-button bg-primary-container text-on-primary-container font-label-bold px-3 py-2">
+              <span class="material-symbols-outlined">send</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function() {
+  const socket = io();
+  const roundDisplay = document.getElementById('round-display');
+  const timerDisplay = document.getElementById('timer-display');
+  const timerBox = document.getElementById('timer-box');
+  const barFill = document.getElementById('bar-fill');
+  const barPercent = document.getElementById('bar-percent');
+  const questionText = document.getElementById('question-text');
+  const answerBtns = document.querySelectorAll('.answer-btn');
+  const rankingList = document.getElementById('ranking-list');
+  const chatToggle = document.getElementById('chat-toggle');
+  const chatArea = document.getElementById('chat-area');
+  const chatArrow = document.getElementById('chat-arrow');
+  const chatMessages = document.getElementById('chat-messages');
+  const chatForm = document.getElementById('chat-form');
+  const chatInput = document.getElementById('chat-input');
+
+  let timerInterval = null;
+  let answered = false;
+
+  chatToggle.addEventListener('click', function() {
+    chatArea.classList.toggle('hidden');
+    chatArrow.textContent = chatArea.classList.contains('hidden') ? 'expand_more' : 'expand_less';
+  });
+
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    socket.emit('chat_message', { message: msg });
+    chatInput.value = '';
+  });
+
+  socket.on('chat_message', function(data) {
+    const div = document.createElement('div');
+    div.className = 'font-body-sm';
+    div.innerHTML = '<span class="text-secondary font-label-bold">' + data.player + ':</span> <span class="text-on-surface">' + data.message + '</span>';
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  });
+
+  answerBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (answered) return;
+      answered = true;
+      answerBtns.forEach(function(b) { b.disabled = true; b.classList.add('opacity-50'); });
+      btn.classList.remove('opacity-50');
+      btn.classList.add('ring-4', 'ring-primary-container');
+      socket.emit('trivia_answer', { answer: btn.dataset.answer });
+    });
+  });
+
+  socket.on('trivia_question', function(data) {
+    answered = false;
+    roundDisplay.textContent = data.round + '/' + data.totalRounds;
+    questionText.textContent = data.question;
+
+    answerBtns.forEach(function(btn) {
+      btn.disabled = false;
+      btn.classList.remove('opacity-50', 'ring-4', 'ring-primary-container', 'bg-green-700', 'bg-red-900');
+      btn.classList.add('bg-surface-container-high');
+      const letter = btn.dataset.answer;
+      btn.querySelector('.answer-text').textContent = data.options[letter] || '—';
+    });
+
+    let timeLeft = data.timeLimit;
+    timerDisplay.textContent = timeLeft;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(function() {
+      timeLeft--;
+      timerDisplay.textContent = timeLeft;
+      if (timeLeft <= 5) {
+        timerDisplay.classList.remove('text-secondary');
+        timerDisplay.classList.add('text-error');
+      }
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        answered = true;
+        answerBtns.forEach(function(b) { b.disabled = true; });
+      }
+    }, 1000);
+  });
+
+  socket.on('trivia_results', function(data) {
+    clearInterval(timerInterval);
+    timerDisplay.textContent = '—';
+    timerDisplay.classList.remove('text-error');
+    timerDisplay.classList.add('text-secondary');
+
+    answerBtns.forEach(function(btn) {
+      const letter = btn.dataset.answer;
+      if (letter === data.correctAnswer) {
+        btn.classList.remove('bg-surface-container-high', 'bg-red-900');
+        btn.classList.add('bg-green-700');
+      } else if (btn.classList.contains('ring-4')) {
+        btn.classList.remove('bg-surface-container-high');
+        btn.classList.add('bg-red-900');
+      }
+    });
+
+    barFill.style.width = data.barPercent + '%';
+    barPercent.textContent = data.barPercent + '%';
+  });
+
+  socket.on('ranking_update', function(data) {
+    rankingList.innerHTML = data.ranking.map(function(p, i) {
+      const medals = ['🥇', '🥈', '🥉'];
+      const medal = i < 3 ? medals[i] : (i + 1) + '.';
+      return '<li class="flex items-center justify-between bg-surface-container rough-border px-3 py-2">' +
+        '<span class="font-body-sm text-on-surface">' + medal + ' ' + p.nombre + '</span>' +
+        '<span class="font-label-bold text-primary-container">' + p.puntos + '</span>' +
+        '</li>';
+    }).join('');
+  });
+
+  socket.on('game_over', function(data) {
+    window.location.href = '/sala/' + data.codigo + '/resultados';
+  });
+})();
+</script>
+
+</body>
+</html>

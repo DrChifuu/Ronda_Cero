@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Votación</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    ::selection{background:#ffd23f;color:black}
+    .vote-btn{transition:transform 0.15s,box-shadow 0.15s}
+    .vote-btn:active{transform:translate(4px,4px);box-shadow:none}
+    .vote-btn.voted{opacity:0.5;pointer-events:none}
+    .progress-fill{transition:width 0.4s ease}
+    .result-appear{animation:resultPop 0.5s ease forwards}
+    @keyframes resultPop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full flex flex-col items-center justify-center">
+
+  <div class="w-full max-w-lg">
+
+    <div class="paper-stack bg-surface-container-high rough-border rough-shadow-lg p-8 text-center mb-margin" style="transform:rotate(-0.5deg)">
+      <span class="material-symbols-outlined text-5xl text-primary-container mb-unit">how_to_vote</span>
+      <h1 class="font-headline-md text-headline-md text-primary-container mb-unit">VOTACIÓN</h1>
+      <p id="vote-context" class="font-body-lg text-body-lg text-on-surface">
+        Esperando pregunta...
+      </p>
+    </div>
+
+    <div id="vote-buttons" class="grid grid-cols-2 gap-margin mb-margin">
+      <button id="btn-yes" class="vote-btn rough-border rough-shadow-lg bg-green-800 hover:bg-green-700 p-8 flex flex-col items-center gap-unit">
+        <span class="text-6xl">👍</span>
+        <span class="font-headline-md text-2xl text-green-200">SÍ</span>
+      </button>
+      <button id="btn-no" class="vote-btn rough-border rough-shadow-lg bg-red-900 hover:bg-red-800 p-8 flex flex-col items-center gap-unit">
+        <span class="text-6xl">👎</span>
+        <span class="font-headline-md text-2xl text-red-200">NO</span>
+      </button>
+    </div>
+
+    <div class="bg-surface-container-high rough-border rough-shadow p-4 mb-margin">
+      <div class="flex items-center justify-between mb-unit">
+        <span class="font-label-bold text-on-surface-variant">VOTOS EMITIDOS</span>
+        <span id="vote-count" class="font-label-bold text-primary-container">0/0</span>
+      </div>
+      <div class="w-full h-5 bg-surface-container-lowest rough-border overflow-hidden">
+        <div id="vote-progress" class="progress-fill h-full bg-secondary" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="vote-result" class="hidden text-center">
+      <div class="result-appear bg-surface-container-high rough-border rough-shadow-lg p-8">
+        <span id="result-icon" class="text-7xl block mb-unit"></span>
+        <h2 id="result-text" class="font-headline-md text-headline-md"></h2>
+        <div class="flex justify-center gap-margin mt-unit">
+          <div>
+            <p class="font-headline-md text-2xl text-green-400" id="result-yes">0</p>
+            <p class="font-body-sm text-on-surface-variant">Sí</p>
+          </div>
+          <div>
+            <p class="font-headline-md text-2xl text-error" id="result-no">0</p>
+            <p class="font-body-sm text-on-surface-variant">No</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function() {
+  var socket = io();
+  var voteContext = document.getElementById('vote-context');
+  var btnYes = document.getElementById('btn-yes');
+  var btnNo = document.getElementById('btn-no');
+  var voteCount = document.getElementById('vote-count');
+  var voteProgress = document.getElementById('vote-progress');
+  var voteResult = document.getElementById('vote-result');
+  var resultIcon = document.getElementById('result-icon');
+  var resultText = document.getElementById('result-text');
+  var resultYes = document.getElementById('result-yes');
+  var resultNo = document.getElementById('result-no');
+  var voteButtons = document.getElementById('vote-buttons');
+  var hasVoted = false;
+
+  socket.on('vote_start', function(data) {
+    hasVoted = false;
+    voteContext.textContent = data.context || '¿Completó el reto?';
+    voteButtons.classList.remove('hidden');
+    voteResult.classList.add('hidden');
+    btnYes.classList.remove('voted');
+    btnNo.classList.remove('voted');
+    voteCount.textContent = '0/' + data.totalPlayers;
+    voteProgress.style.width = '0%';
+  });
+
+  socket.on('vote_update', function(data) {
+    voteCount.textContent = data.votesCast + '/' + data.totalPlayers;
+    var pct = data.totalPlayers > 0 ? Math.round((data.votesCast / data.totalPlayers) * 100) : 0;
+    voteProgress.style.width = pct + '%';
+  });
+
+  socket.on('vote_result', function(data) {
+    voteButtons.classList.add('hidden');
+    voteResult.classList.remove('hidden');
+    resultYes.textContent = data.yes;
+    resultNo.textContent = data.no;
+    if (data.approved) {
+      resultIcon.textContent = '✅';
+      resultText.textContent = '¡APROBADO!';
+      resultText.className = 'font-headline-md text-headline-md text-green-400';
+    } else {
+      resultIcon.textContent = '❌';
+      resultText.textContent = 'RECHAZADO';
+      resultText.className = 'font-headline-md text-headline-md text-error';
+    }
+  });
+
+  btnYes.addEventListener('click', function() {
+    if (hasVoted) return;
+    hasVoted = true;
+    socket.emit('vote_cast', { vote: 'yes' });
+    btnYes.classList.add('voted');
+    btnNo.classList.add('voted');
+  });
+
+  btnNo.addEventListener('click', function() {
+    if (hasVoted) return;
+    hasVoted = true;
+    socket.emit('vote_cast', { vote: 'no' });
+    btnYes.classList.add('voted');
+    btnNo.classList.add('voted');
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RondaCero &mdash; Iniciar Sesión</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface-bright": "#303b41", "surface-dim": "#0a151a", "secondary-fixed-dim": "#5bd5fc",
+        "background": "#0a151a", "inverse-surface": "#d8e4ec", "on-surface": "#d8e4ec",
+        "inverse-primary": "#745c00", "surface": "#0a151a", "surface-container-low": "#121d23",
+        "on-primary-container": "#725a00", "on-tertiary-container": "#b8005e",
+        "secondary-container": "#00a3c8", "primary-container": "#ffd23f", "on-error": "#690005",
+        "surface-container-highest": "#2b363d", "primary-fixed": "#ffe089",
+        "surface-variant": "#2b363d", "on-secondary-container": "#003341",
+        "tertiary-fixed-dim": "#ffb1c6", "on-error-container": "#ffdad6",
+        "on-surface-variant": "#d1c5ad", "error-container": "#93000a",
+        "secondary-fixed": "#b7eaff", "outline-variant": "#4d4634", "error": "#ffb4ab",
+        "surface-container-lowest": "#051015", "inverse-on-surface": "#273238",
+        "on-tertiary-fixed": "#3f001c", "tertiary-container": "#ffc9d6",
+        "on-secondary-fixed": "#001f28", "on-tertiary": "#650031",
+        "on-primary-fixed": "#241a00", "primary-fixed-dim": "#edc22e",
+        "tertiary": "#fff0f2", "surface-tint": "#edc22e",
+        "surface-container-high": "#202b32", "on-secondary-fixed-variant": "#004e61",
+        "secondary": "#5bd5fc", "on-primary-fixed-variant": "#574500",
+        "on-secondary": "#003543", "on-primary": "#3d2f00", "primary": "#fff2d7",
+        "outline": "#9a907a", "on-background": "#d8e4ec", "surface-container": "#162127",
+        "tertiary-fixed": "#ffd9e1", "on-tertiary-fixed-variant": "#8e0048"
+      },
+      fontFamily: {
+        "body-sm": ["Be Vietnam Pro"], "body-lg": ["Be Vietnam Pro"],
+        "headline-xl": ["Spline Sans"], "label-bold": ["Lexend"],
+        "bilingual-sub": ["Be Vietnam Pro"], "headline-md": ["Spline Sans"]
+      },
+      fontSize: {
+        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+        "headline-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+        "label-bold": ["14px", { "lineHeight": "1.0", "fontWeight": "600" }],
+        "bilingual-sub": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }]
+      },
+      borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      spacing: { "margin": "24px", "chunky-gap": "12px", "gutter": "16px", "container-max": "1200px", "unit": "8px" }
+    }
+  }
+}
+  </script>
+  <style>
+    .rough-border { border: 4px solid #000; border-radius: 4px 8px 3px 6px; }
+    .rough-shadow { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
+    .rough-shadow-lg { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
+    .rough-button:active { box-shadow: none; transform: translate(4px, 4px); }
+    .paper-stack { position: relative; }
+    .paper-stack::before { content: ''; position: absolute; top: 4px; left: -4px; right: 4px; bottom: -4px; border: 4px solid #000; background: #2b363d; z-index: -1; transform: rotate(-1deg); }
+    .error-msg { background: #93000a; color: #ffdad6; border: 2px solid black; }
+    .game-card { transition: transform 0.3s; }
+    .game-card:hover { transform: rotate(0deg) scale(1.05) !important; }
+    ::selection { background: #ffd23f; color: black; }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+
+  <%- include('partials/header') %>
+
+  <main class="flex-1 flex flex-col items-center justify-center px-gutter py-margin">
+
+    <div class="paper-stack bg-surface-container-high rough-border rough-shadow-lg p-8 w-full max-w-md">
+
+      <h2 class="font-headline-md text-headline-md text-primary-container text-center mb-unit" id="form-title">
+        Iniciar Sesión
+      </h2>
+      <p class="font-body-sm text-body-sm text-on-surface-variant text-center mb-margin" id="form-subtitle">
+        Ingresa tus credenciales para continuar
+      </p>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="error-msg rough-border px-4 py-3 mb-chunky-gap font-body-sm text-body-sm">
+          <span class="material-symbols-outlined align-middle mr-1">error</span>
+          <%= error %>
+        </div>
+      <% } %>
+
+      <form id="auth-form" method="POST" action="/auth/login" class="flex flex-col gap-chunky-gap">
+        <div>
+          <label for="email" class="font-label-bold text-label-bold text-on-surface block mb-1">
+            <span class="material-symbols-outlined align-middle mr-1 text-sm">mail</span>Email
+          </label>
+          <input type="email" id="email" name="email" required
+                 class="rough-border bg-surface-dim text-on-surface px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-container"
+                 placeholder="tu@email.com" />
+        </div>
+
+        <div>
+          <label for="password" class="font-label-bold text-label-bold text-on-surface block mb-1">
+            <span class="material-symbols-outlined align-middle mr-1 text-sm">lock</span>Contraseña
+          </label>
+          <input type="password" id="password" name="password" required
+                 class="rough-border bg-surface-dim text-on-surface px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-container"
+                 placeholder="••••••••" />
+        </div>
+
+        <div id="register-fields" class="hidden flex flex-col gap-chunky-gap">
+          <div>
+            <label for="nombre_jugador" class="font-label-bold text-label-bold text-on-surface block mb-1">
+              <span class="material-symbols-outlined align-middle mr-1 text-sm">person</span>Nombre de Jugador
+            </label>
+            <input type="text" id="nombre_jugador" name="nombre_jugador" maxlength="20"
+                   class="rough-border bg-surface-dim text-on-surface px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-container"
+                   placeholder="Tu nombre en el juego" />
+          </div>
+        </div>
+
+        <button type="submit"
+                class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold text-lg py-4 uppercase tracking-wide mt-unit">
+          <span class="material-symbols-outlined align-middle mr-1">login</span>
+          <span id="submit-text">Iniciar Sesión</span>
+        </button>
+      </form>
+
+      <div class="text-center mt-chunky-gap">
+        <button id="toggle-form" type="button"
+                class="font-body-sm text-body-sm text-secondary underline hover:text-primary-container transition-colors">
+          ¿No tienes cuenta? Regístrate
+        </button>
+      </div>
+
+      <div class="text-center mt-unit">
+        <a href="/identificacion" class="font-body-sm text-body-sm text-on-surface-variant underline hover:text-secondary transition-colors">
+          Continuar como invitado &rarr;
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+
+  <script>
+    const toggleBtn = document.getElementById('toggle-form');
+    const form = document.getElementById('auth-form');
+    const title = document.getElementById('form-title');
+    const subtitle = document.getElementById('form-subtitle');
+    const submitText = document.getElementById('submit-text');
+    const registerFields = document.getElementById('register-fields');
+    let isRegister = false;
+
+    toggleBtn.addEventListener('click', function() {
+      isRegister = !isRegister;
+      if (isRegister) {
+        form.action = '/auth/register';
+        title.textContent = 'Registrarse';
+        subtitle.textContent = 'Crea tu cuenta para empezar a jugar';
+        submitText.textContent = 'Registrarse';
+        registerFields.classList.remove('hidden');
+        registerFields.classList.add('flex');
+        toggleBtn.textContent = '¿Ya tienes cuenta? Inicia sesión';
+      } else {
+        form.action = '/auth/login';
+        title.textContent = 'Iniciar Sesión';
+        subtitle.textContent = 'Ingresa tus credenciales para continuar';
+        submitText.textContent = 'Iniciar Sesión';
+        registerFields.classList.add('hidden');
+        registerFields.classList.remove('flex');
+        toggleBtn.textContent = '¿No tienes cuenta? Regístrate';
+      }
+    });
+  </script>
+
+</body>
+</html>

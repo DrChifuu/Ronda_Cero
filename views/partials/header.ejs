@@ -1,0 +1,20 @@
+<header class="bg-surface-container border-b-4 border-black px-gutter py-unit">
+  <div class="max-w-container-max mx-auto flex items-center justify-between">
+    <a href="/" class="font-headline-xl text-2xl text-primary-container italic tracking-tight">
+      RONDA<span class="text-secondary">CERO</span>
+    </a>
+    <% if (typeof session !== 'undefined' && session && session.playerName) { %>
+    <nav class="flex items-center gap-chunky-gap">
+      <a href="/dashboard" class="font-label-bold text-on-surface hover:text-primary-container transition-colors">
+        <span class="material-symbols-outlined align-middle mr-1">dashboard</span>Panel
+      </a>
+      <a href="/canje" class="font-label-bold text-on-surface hover:text-primary-container transition-colors">
+        <span class="material-symbols-outlined align-middle mr-1">redeem</span>Premios
+      </a>
+      <a href="/auth/logout" class="font-label-bold text-on-surface hover:text-error transition-colors">
+        <span class="material-symbols-outlined align-middle mr-1">logout</span>Salir
+      </a>
+    </nav>
+    <% } %>
+  </div>
+</header>

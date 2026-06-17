@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Crear Sala</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    .game-card{transition:transform 0.3s}
+    .game-card:hover{transform:rotate(0deg) scale(1.05)!important}
+    ::selection{background:#ffd23f;color:black}
+    .bar-fill{transition:width 0.5s ease;background:linear-gradient(90deg,#ffd23f,#ef476f)}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full flex items-center justify-center">
+  <div class="paper-stack bg-surface-container-high rough-border rough-shadow-lg p-8 w-full max-w-xl" style="transform: rotate(-0.5deg);">
+    <h1 class="font-headline-md text-headline-md text-primary-container text-center mb-margin">
+      <span class="material-symbols-outlined align-middle text-4xl">add_circle</span>
+      CREAR SALA
+    </h1>
+
+    <div id="error-box" class="error-msg rough-border p-3 mb-margin hidden">
+      <p id="error-text" class="font-body-sm"></p>
+    </div>
+
+    <form id="crear-sala-form" class="flex flex-col gap-margin">
+      <div>
+        <label for="nombre-sala" class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider block mb-unit">
+          <span class="material-symbols-outlined align-middle mr-1">meeting_room</span>Nombre de sala
+        </label>
+        <input type="text" id="nombre-sala" name="nombre_sala" maxlength="30" placeholder="(opcional)"
+               class="w-full bg-surface-container-low rough-border px-4 py-3 text-on-surface font-body-lg focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant"/>
+      </div>
+
+      <div>
+        <label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider block mb-unit">
+          <span class="material-symbols-outlined align-middle mr-1">sports_esports</span>Modos de juego
+        </label>
+        <div class="grid grid-cols-2 gap-chunky-gap">
+          <label class="flex items-center gap-unit bg-surface-container rough-border px-3 py-2 cursor-pointer hover:bg-surface-container-highest transition-colors">
+            <input type="checkbox" name="modos" value="trivia" checked class="w-5 h-5 accent-primary-container"/>
+            <span class="font-body-sm">Trivia</span>
+          </label>
+          <label class="flex items-center gap-unit bg-surface-container rough-border px-3 py-2 cursor-pointer hover:bg-surface-container-highest transition-colors">
+            <input type="checkbox" name="modos" value="retos" checked class="w-5 h-5 accent-primary-container"/>
+            <span class="font-body-sm">Retos</span>
+          </label>
+          <label class="flex items-center gap-unit bg-surface-container rough-border px-3 py-2 cursor-pointer hover:bg-surface-container-highest transition-colors">
+            <input type="checkbox" name="modos" value="yonunca" checked class="w-5 h-5 accent-primary-container"/>
+            <span class="font-body-sm">Yo Nunca</span>
+          </label>
+          <label class="flex items-center gap-unit bg-surface-container rough-border px-3 py-2 cursor-pointer hover:bg-surface-container-highest transition-colors">
+            <input type="checkbox" name="modos" value="verdadoroto" checked class="w-5 h-5 accent-primary-container"/>
+            <span class="font-body-sm">Verdad o Reto</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-chunky-gap">
+        <div>
+          <label for="rondas" class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider block mb-unit">
+            <span class="material-symbols-outlined align-middle mr-1">repeat</span>Rondas
+          </label>
+          <select id="rondas" name="rondas"
+                  class="w-full bg-surface-container-low rough-border px-4 py-3 text-on-surface font-body-lg focus:outline-none focus:ring-2 focus:ring-primary-container">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="tiempo" class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider block mb-unit">
+            <span class="material-symbols-outlined align-middle mr-1">timer</span>Tiempo por pregunta
+          </label>
+          <select id="tiempo" name="tiempo_pregunta"
+                  class="w-full bg-surface-container-low rough-border px-4 py-3 text-on-surface font-body-lg focus:outline-none focus:ring-2 focus:ring-primary-container">
+            <option value="10">10s</option>
+            <option value="20" selected>20s</option>
+            <option value="30">30s</option>
+            <option value="45">45s</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-chunky-gap">
+        <div>
+          <label for="dificultad" class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider block mb-unit">
+            <span class="material-symbols-outlined align-middle mr-1">speed</span>Dificultad
+          </label>
+          <select id="dificultad" name="dificultad"
+                  class="w-full bg-surface-container-low rough-border px-4 py-3 text-on-surface font-body-lg focus:outline-none focus:ring-2 focus:ring-primary-container">
+            <option value="facil">Fácil</option>
+            <option value="normal" selected>Normal</option>
+            <option value="dificil">Difícil</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="barra-error" class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider block mb-unit">
+            <span class="material-symbols-outlined align-middle mr-1">error_outline</span>Llenado barra por error
+          </label>
+          <select id="barra-error" name="llenado_barra_error"
+                  class="w-full bg-surface-container-low rough-border px-4 py-3 text-on-surface font-body-lg focus:outline-none focus:ring-2 focus:ring-primary-container">
+            <option value="5">5%</option>
+            <option value="8" selected>8%</option>
+            <option value="12">12%</option>
+            <option value="20">20%</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" id="btn-crear"
+              class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold text-lg px-8 py-4 uppercase tracking-wide w-full mt-unit">
+        <span class="material-symbols-outlined align-middle mr-1">rocket_launch</span>
+        CREAR SALA
+      </button>
+    </form>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+(function() {
+  const form = document.getElementById('crear-sala-form');
+  const errorBox = document.getElementById('error-box');
+  const errorText = document.getElementById('error-text');
+  const btnCrear = document.getElementById('btn-crear');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errorBox.classList.add('hidden');
+
+    const modos = Array.from(document.querySelectorAll('input[name="modos"]:checked')).map(cb => cb.value);
+    if (modos.length === 0) {
+      errorText.textContent = 'Debes seleccionar al menos un modo de juego.';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
+    const data = {
+      nombre_sala: document.getElementById('nombre-sala').value.trim() || null,
+      modos: modos,
+      rondas: parseInt(document.getElementById('rondas').value),
+      tiempo_pregunta: parseInt(document.getElementById('tiempo').value),
+      dificultad: document.getElementById('dificultad').value,
+      llenado_barra_error: parseInt(document.getElementById('barra-error').value)
+    };
+
+    btnCrear.disabled = true;
+    btnCrear.textContent = 'CREANDO...';
+
+    try {
+      const res = await fetch('/api/salas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'Error al crear la sala');
+      }
+
+      const result = await res.json();
+      window.location.href = '/sala/' + result.codigo;
+    } catch (err) {
+      errorText.textContent = err.message;
+      errorBox.classList.remove('hidden');
+      btnCrear.disabled = false;
+      btnCrear.textContent = 'CREAR SALA';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

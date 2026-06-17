@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Dividir Gastos</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    ::selection{background:#ffd23f;color:black}
+    .expense-row{transition:background 0.2s}
+    .expense-row:hover{background:#202b32}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full">
+
+  <div class="flex items-center justify-between mb-margin">
+    <h1 class="font-headline-md text-headline-md text-primary-container">
+      <span class="material-symbols-outlined align-middle mr-2">receipt_long</span>DIVIDIR GASTOS
+    </h1>
+    <a href="/dashboard" class="rough-border rough-shadow rough-button bg-surface-container-high text-on-surface font-label-bold px-4 py-2 uppercase">
+      <span class="material-symbols-outlined align-middle mr-1">arrow_back</span>Volver
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-margin">
+
+    <div class="lg:col-span-2">
+
+      <div class="bg-surface-container-high rough-border rough-shadow mb-margin">
+        <div class="flex items-center justify-between p-4 border-b-4 border-black">
+          <h2 class="font-label-bold text-on-surface-variant uppercase">LISTA DE GASTOS</h2>
+          <button id="btn-add" class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold px-3 py-1 uppercase text-sm">
+            <span class="material-symbols-outlined align-middle mr-1" style="font-size:18px">add</span>Agregar Gasto
+          </button>
+        </div>
+
+        <div id="add-form" class="hidden p-4 border-b-4 border-black bg-surface-container-low">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-chunky-gap">
+            <input type="text" id="inp-item" placeholder="Concepto" maxlength="50"
+                   class="bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant"/>
+            <input type="number" id="inp-price" placeholder="Precio ($)" min="0" step="100"
+                   class="bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant"/>
+            <input type="text" id="inp-person" placeholder="¿Quién pagó?" maxlength="30"
+                   class="bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant"/>
+          </div>
+          <div class="flex gap-chunky-gap mt-unit justify-end">
+            <button id="btn-cancel-add" class="rough-border rough-button bg-surface-container-high text-on-surface font-label-bold px-3 py-1 uppercase text-sm">Cancelar</button>
+            <button id="btn-confirm-add" class="rough-border rough-button bg-secondary-container text-on-secondary-container font-label-bold px-3 py-1 uppercase text-sm">Agregar</button>
+          </div>
+        </div>
+
+        <div id="expenses-list" class="divide-y-2 divide-black">
+          <div class="p-4 text-center">
+            <p class="font-body-sm text-on-surface-variant">No hay gastos registrados. ¡Agrega el primero!</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex flex-col gap-margin">
+
+      <div class="paper-stack bg-surface-container-high rough-border rough-shadow-lg p-6" style="transform:rotate(0.5deg)">
+        <h2 class="font-label-bold text-on-surface-variant uppercase mb-unit">RESUMEN</h2>
+        <div class="flex items-center justify-between mb-unit">
+          <span class="font-body-sm text-on-surface-variant">Total acumulado</span>
+          <span class="font-headline-md text-2xl text-primary-container" id="total-amount">$0</span>
+        </div>
+        <div class="flex items-center justify-between mb-unit">
+          <span class="font-body-sm text-on-surface-variant">Personas</span>
+          <span class="font-headline-md text-xl text-secondary" id="total-people">0</span>
+        </div>
+        <div class="border-t-4 border-black pt-unit mt-unit">
+          <div class="flex items-center justify-between">
+            <span class="font-label-bold text-on-surface">Cada uno paga</span>
+            <span class="font-headline-md text-2xl text-primary-fixed" id="per-person">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-high rough-border rough-shadow p-4">
+        <h2 class="font-label-bold text-on-surface-variant uppercase mb-unit">ESTADO POR PERSONA</h2>
+        <div id="people-status" class="flex flex-col gap-unit">
+          <p class="font-body-sm text-on-surface-variant text-center py-2">Sin datos</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+(function() {
+  var expenses = [];
+  var people = {};
+  var btnAdd = document.getElementById('btn-add');
+  var addForm = document.getElementById('add-form');
+  var btnCancel = document.getElementById('btn-cancel-add');
+  var btnConfirm = document.getElementById('btn-confirm-add');
+  var inpItem = document.getElementById('inp-item');
+  var inpPrice = document.getElementById('inp-price');
+  var inpPerson = document.getElementById('inp-person');
+  var expensesList = document.getElementById('expenses-list');
+  var totalAmount = document.getElementById('total-amount');
+  var totalPeople = document.getElementById('total-people');
+  var perPerson = document.getElementById('per-person');
+  var peopleStatus = document.getElementById('people-status');
+
+  function formatMoney(n) {
+    return '$' + n.toLocaleString('es-CL');
+  }
+
+  function render() {
+    var total = expenses.reduce(function(s, e) { return s + e.price; }, 0);
+    var uniquePeople = Object.keys(people);
+    var count = uniquePeople.length || 1;
+    var split = Math.ceil(total / count);
+
+    totalAmount.textContent = formatMoney(total);
+    totalPeople.textContent = uniquePeople.length;
+    perPerson.textContent = uniquePeople.length > 0 ? formatMoney(split) : '$0';
+
+    if (expenses.length === 0) {
+      expensesList.innerHTML = '<div class="p-4 text-center"><p class="font-body-sm text-on-surface-variant">No hay gastos registrados. ¡Agrega el primero!</p></div>';
+    } else {
+      expensesList.innerHTML = expenses.map(function(e, i) {
+        return '<div class="expense-row flex items-center justify-between px-4 py-3">' +
+          '<div class="flex-1">' +
+            '<p class="font-body-sm text-on-surface">' + e.item + '</p>' +
+            '<p class="font-bilingual-sub text-on-surface-variant">Pagó: ' + e.person + '</p>' +
+          '</div>' +
+          '<div class="flex items-center gap-chunky-gap">' +
+            '<span class="font-label-bold text-primary-container">' + formatMoney(e.price) + '</span>' +
+            '<button data-idx="' + i + '" class="del-btn text-error hover:text-error-container"><span class="material-symbols-outlined" style="font-size:20px">delete</span></button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      document.querySelectorAll('.del-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx);
+          expenses.splice(idx, 1);
+          recalcPeople();
+          render();
+        });
+      });
+    }
+
+    if (uniquePeople.length === 0) {
+      peopleStatus.innerHTML = '<p class="font-body-sm text-on-surface-variant text-center py-2">Sin datos</p>';
+    } else {
+      peopleStatus.innerHTML = uniquePeople.map(function(name) {
+        var paid = people[name];
+        var owes = split;
+        var diff = paid - owes;
+        var statusIcon = diff >= 0 ? '✅' : '⏳';
+        var statusText = diff >= 0 ? 'Pagó de más: ' + formatMoney(diff) : 'Debe: ' + formatMoney(Math.abs(diff));
+        return '<div class="flex items-center justify-between bg-surface-container rough-border px-3 py-2">' +
+          '<span class="font-body-sm text-on-surface">' + statusIcon + ' ' + name + '</span>' +
+          '<span class="font-bilingual-sub ' + (diff >= 0 ? 'text-secondary' : 'text-error') + '">' + statusText + '</span>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  function recalcPeople() {
+    people = {};
+    expenses.forEach(function(e) {
+      if (!people[e.person]) people[e.person] = 0;
+      people[e.person] += e.price;
+    });
+  }
+
+  btnAdd.addEventListener('click', function() {
+    addForm.classList.remove('hidden');
+    btnAdd.classList.add('hidden');
+    inpItem.focus();
+  });
+
+  btnCancel.addEventListener('click', function() {
+    addForm.classList.add('hidden');
+    btnAdd.classList.remove('hidden');
+    inpItem.value = '';
+    inpPrice.value = '';
+    inpPerson.value = '';
+  });
+
+  btnConfirm.addEventListener('click', function() {
+    var item = inpItem.value.trim();
+    var price = parseInt(inpPrice.value);
+    var person = inpPerson.value.trim();
+    if (!item || !price || price <= 0 || !person) return;
+    expenses.push({ item: item, price: price, person: person });
+    recalcPeople();
+    render();
+    inpItem.value = '';
+    inpPrice.value = '';
+    inpPerson.value = '';
+    inpItem.focus();
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Admin Premios</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    ::selection{background:#ffd23f;color:black}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:50}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full">
+
+  <div class="flex items-center justify-between mb-margin">
+    <h1 class="font-headline-md text-headline-md text-primary-container">
+      <span class="material-symbols-outlined align-middle mr-2">admin_panel_settings</span>ADMINISTRAR PREMIOS
+    </h1>
+    <a href="/dashboard" class="rough-border rough-shadow rough-button bg-surface-container-high text-on-surface font-label-bold px-4 py-2 uppercase">
+      <span class="material-symbols-outlined align-middle mr-1">arrow_back</span>Volver
+    </a>
+  </div>
+
+  <div class="bg-surface-container-high rough-border rough-shadow mb-margin">
+    <div class="flex items-center justify-between p-4 border-b-4 border-black">
+      <h2 class="font-label-bold text-on-surface-variant uppercase">CATÁLOGO DE PREMIOS</h2>
+      <button id="btn-add-prize" class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold px-3 py-1 uppercase text-sm">
+        <span class="material-symbols-outlined align-middle mr-1" style="font-size:18px">add</span>Agregar Premio
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b-4 border-black bg-surface-container-lowest">
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-left">Nombre</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Costo</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Stock</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Activo</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="prizes-body">
+          <tr><td colspan="5" class="px-4 py-6 text-center font-body-sm text-on-surface-variant">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-high rough-border rough-shadow">
+    <div class="p-4 border-b-4 border-black">
+      <h2 class="font-label-bold text-on-surface-variant uppercase">
+        <span class="material-symbols-outlined align-middle mr-1">history</span>ÚLTIMOS 20 CANJES
+      </h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b-4 border-black bg-surface-container-lowest">
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-left">Fecha</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-left">Jugador</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-left">Premio</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Costo</th>
+            <th class="font-label-bold text-on-surface-variant px-4 py-3 text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="canjes-body">
+          <tr><td colspan="5" class="px-4 py-6 text-center font-body-sm text-on-surface-variant">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<div id="prize-modal" class="modal-overlay hidden">
+  <div class="bg-surface-container-high rough-border rough-shadow-lg p-8 max-w-md w-full mx-4" style="transform:rotate(-0.5deg)">
+    <h3 class="font-headline-md text-xl text-primary-container mb-unit" id="modal-title">AGREGAR PREMIO</h3>
+    <input type="hidden" id="edit-id"/>
+    <div class="flex flex-col gap-chunky-gap mb-margin">
+      <div>
+        <label class="font-label-bold text-on-surface-variant block mb-1">Nombre</label>
+        <input type="text" id="f-name" maxlength="60" class="w-full bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant" placeholder="Nombre del premio"/>
+      </div>
+      <div>
+        <label class="font-label-bold text-on-surface-variant block mb-1">Descripción</label>
+        <textarea id="f-desc" maxlength="200" rows="2" class="w-full bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant" placeholder="Descripción breve"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-chunky-gap">
+        <div>
+          <label class="font-label-bold text-on-surface-variant block mb-1">Costo (monedas)</label>
+          <input type="number" id="f-cost" min="1" class="w-full bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant" placeholder="100"/>
+        </div>
+        <div>
+          <label class="font-label-bold text-on-surface-variant block mb-1">Stock</label>
+          <input type="number" id="f-stock" min="0" class="w-full bg-surface-container-lowest rough-border px-3 py-2 text-on-surface font-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant" placeholder="10"/>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-chunky-gap justify-end">
+      <button id="modal-cancel" class="rough-border rough-shadow rough-button bg-surface-container-lowest text-on-surface font-label-bold px-5 py-2 uppercase">Cancelar</button>
+      <button id="modal-save" class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold px-5 py-2 uppercase">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div id="delete-modal" class="modal-overlay hidden">
+  <div class="bg-surface-container-high rough-border rough-shadow-lg p-8 max-w-sm w-full mx-4">
+    <h3 class="font-headline-md text-xl text-error mb-unit">ELIMINAR PREMIO</h3>
+    <p class="font-body-lg text-on-surface mb-margin" id="delete-text">¿Estás seguro de eliminar este premio?</p>
+    <input type="hidden" id="delete-id"/>
+    <div class="flex gap-chunky-gap justify-end">
+      <button id="delete-cancel" class="rough-border rough-shadow rough-button bg-surface-container-lowest text-on-surface font-label-bold px-5 py-2 uppercase">Cancelar</button>
+      <button id="delete-confirm" class="rough-border rough-shadow rough-button bg-error-container text-on-error-container font-label-bold px-5 py-2 uppercase">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+
+<script>
+(function() {
+  var prizesBody = document.getElementById('prizes-body');
+  var canjesBody = document.getElementById('canjes-body');
+  var prizeModal = document.getElementById('prize-modal');
+  var deleteModal = document.getElementById('delete-modal');
+  var modalTitle = document.getElementById('modal-title');
+  var editId = document.getElementById('edit-id');
+  var fName = document.getElementById('f-name');
+  var fDesc = document.getElementById('f-desc');
+  var fCost = document.getElementById('f-cost');
+  var fStock = document.getElementById('f-stock');
+  var deleteId = document.getElementById('delete-id');
+  var deleteText = document.getElementById('delete-text');
+
+  function loadPrizes() {
+    fetch('/api/premios')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || data.length === 0) {
+          prizesBody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center font-body-sm text-on-surface-variant">No hay premios</td></tr>';
+          return;
+        }
+        prizesBody.innerHTML = data.map(function(p) {
+          var activoBadge = p.activo !== false
+            ? '<span class="font-label-bold text-secondary bg-surface-container-low px-2 py-1 rough-border">SÍ</span>'
+            : '<span class="font-label-bold text-error bg-surface-container-low px-2 py-1 rough-border">NO</span>';
+          return '<tr class="border-b-2 border-black bg-surface-container-high">' +
+            '<td class="px-4 py-3 font-body-sm text-on-surface">' + p.nombre_premio + '</td>' +
+            '<td class="px-4 py-3 text-center font-label-bold text-primary-container">🪙 ' + p.costo_monedas + '</td>' +
+            '<td class="px-4 py-3 text-center font-body-sm text-on-surface">' + p.stock + '</td>' +
+            '<td class="px-4 py-3 text-center">' + activoBadge + '</td>' +
+            '<td class="px-4 py-3 text-center flex justify-center gap-unit">' +
+              '<button data-edit="' + p.id_premio + '" class="edit-btn rough-border rough-button bg-secondary-container text-on-secondary-container px-2 py-1"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>' +
+              '<button data-del="' + p.id_premio + '" data-name="' + p.nombre_premio + '" class="del-btn rough-border rough-button bg-error-container text-on-error-container px-2 py-1"><span class="material-symbols-outlined" style="font-size:18px">delete</span></button>' +
+            '</td>' +
+          '</tr>';
+        }).join('');
+        bindTableEvents();
+      })
+      .catch(function() {
+        prizesBody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center error-msg font-body-sm">Error al cargar</td></tr>';
+      });
+  }
+
+  function loadCanjes() {
+    fetch('/api/canje/historial')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || data.length === 0) {
+          canjesBody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center font-body-sm text-on-surface-variant">Sin canjes recientes</td></tr>';
+          return;
+        }
+        canjesBody.innerHTML = data.slice(0, 20).map(function(c) {
+          var estadoClass = c.estado === 'completado' ? 'text-secondary' : (c.estado === 'pendiente' ? 'text-primary-container' : 'text-error');
+          return '<tr class="border-b-2 border-black bg-surface-container-high">' +
+            '<td class="px-4 py-3 font-body-sm text-on-surface-variant">' + new Date(c.fecha_canje).toLocaleDateString('es-CL') + '</td>' +
+            '<td class="px-4 py-3 font-body-sm text-on-surface">' + (c.nombre_jugador || '—') + '</td>' +
+            '<td class="px-4 py-3 font-body-sm text-on-surface">' + (c.nombre_premio || '—') + '</td>' +
+            '<td class="px-4 py-3 text-center font-label-bold text-primary-container">' + (c.costo_monedas || '—') + '</td>' +
+            '<td class="px-4 py-3 text-center font-label-bold ' + estadoClass + '">' + (c.estado || '—') + '</td>' +
+          '</tr>';
+        }).join('');
+      })
+      .catch(function() {
+        canjesBody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center error-msg font-body-sm">Error al cargar</td></tr>';
+      });
+  }
+
+  function bindTableEvents() {
+    document.querySelectorAll('.edit-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = btn.dataset.edit;
+        fetch('/api/premios/' + id)
+          .then(function(r) { return r.json(); })
+          .then(function(p) {
+            editId.value = p.id_premio;
+            fName.value = p.nombre_premio || '';
+            fDesc.value = p.descripcion || '';
+            fCost.value = p.costo_monedas || '';
+            fStock.value = p.stock || '';
+            modalTitle.textContent = 'EDITAR PREMIO';
+            prizeModal.classList.remove('hidden');
+          });
+      });
+    });
+    document.querySelectorAll('.del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        deleteId.value = btn.dataset.del;
+        deleteText.textContent = '¿Eliminar "' + btn.dataset.name + '"? Esta acción no se puede deshacer.';
+        deleteModal.classList.remove('hidden');
+      });
+    });
+  }
+
+  document.getElementById('btn-add-prize').addEventListener('click', function() {
+    editId.value = '';
+    fName.value = '';
+    fDesc.value = '';
+    fCost.value = '';
+    fStock.value = '';
+    modalTitle.textContent = 'AGREGAR PREMIO';
+    prizeModal.classList.remove('hidden');
+  });
+
+  document.getElementById('modal-cancel').addEventListener('click', function() {
+    prizeModal.classList.add('hidden');
+  });
+
+  document.getElementById('modal-save').addEventListener('click', function() {
+    var payload = {
+      nombre_premio: fName.value.trim(),
+      descripcion: fDesc.value.trim(),
+      costo_monedas: parseInt(fCost.value) || 0,
+      stock: parseInt(fStock.value) || 0
+    };
+    if (!payload.nombre_premio || payload.costo_monedas <= 0) return;
+
+    var isEdit = editId.value !== '';
+    var url = isEdit ? '/api/premios/' + editId.value : '/api/premios';
+    var method = isEdit ? 'PUT' : 'POST';
+
+    fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error('Error');
+      prizeModal.classList.add('hidden');
+      loadPrizes();
+    })
+    .catch(function(err) { alert('Error: ' + err.message); });
+  });
+
+  document.getElementById('delete-cancel').addEventListener('click', function() {
+    deleteModal.classList.add('hidden');
+  });
+
+  document.getElementById('delete-confirm').addEventListener('click', function() {
+    var id = deleteId.value;
+    if (!id) return;
+    fetch('/api/premios/' + id, { method: 'DELETE' })
+      .then(function(r) {
+        if (!r.ok) throw new Error('Error');
+        deleteModal.classList.add('hidden');
+        loadPrizes();
+      })
+      .catch(function(err) { alert('Error: ' + err.message); });
+  });
+
+  prizeModal.addEventListener('click', function(e) {
+    if (e.target === prizeModal) prizeModal.classList.add('hidden');
+  });
+  deleteModal.addEventListener('click', function(e) {
+    if (e.target === deleteModal) deleteModal.classList.add('hidden');
+  });
+
+  loadPrizes();
+  loadCanjes();
+})();
+</script>
+
+</body>
+</html>

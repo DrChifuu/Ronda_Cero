@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RondaCero - Chat</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400;1,500&family=Lexend:wght@600&family=Spline+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+  <script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#303b41","surface-dim":"#0a151a","secondary-fixed-dim":"#5bd5fc","background":"#0a151a","inverse-surface":"#d8e4ec","on-surface":"#d8e4ec","inverse-primary":"#745c00","surface":"#0a151a","surface-container-low":"#121d23","on-primary-container":"#725a00","on-tertiary-container":"#b8005e","secondary-container":"#00a3c8","primary-container":"#ffd23f","on-error":"#690005","surface-container-highest":"#2b363d","primary-fixed":"#ffe089","surface-variant":"#2b363d","on-secondary-container":"#003341","tertiary-fixed-dim":"#ffb1c6","on-error-container":"#ffdad6","on-surface-variant":"#d1c5ad","error-container":"#93000a","secondary-fixed":"#b7eaff","outline-variant":"#4d4634","error":"#ffb4ab","surface-container-lowest":"#051015","inverse-on-surface":"#273238","on-tertiary-fixed":"#3f001c","tertiary-container":"#ffc9d6","on-secondary-fixed":"#001f28","on-tertiary":"#650031","on-primary-fixed":"#241a00","primary-fixed-dim":"#edc22e","tertiary":"#fff0f2","surface-tint":"#edc22e","surface-container-high":"#202b32","on-secondary-fixed-variant":"#004e61","secondary":"#5bd5fc","on-primary-fixed-variant":"#574500","on-secondary":"#003543","on-primary":"#3d2f00","primary":"#fff2d7","outline":"#9a907a","on-background":"#d8e4ec","surface-container":"#162127","tertiary-fixed":"#ffd9e1","on-tertiary-fixed-variant":"#8e0048"},fontFamily:{"body-sm":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"headline-xl":["Spline Sans"],"label-bold":["Lexend"],"bilingual-sub":["Be Vietnam Pro"],"headline-md":["Spline Sans"]},fontSize:{"body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"1.1","letterSpacing":"-0.02em","fontWeight":"800"}],"label-bold":["14px",{"lineHeight":"1.0","fontWeight":"600"}],"bilingual-sub":["12px",{"lineHeight":"1.2","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.2","fontWeight":"700"}]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"24px","chunky-gap":"12px","gutter":"16px","container-max":"1200px","unit":"8px"}}}}
+  </script>
+  <style>
+    .rough-border{border:4px solid #000;border-radius:4px 8px 3px 6px}
+    .rough-shadow{box-shadow:4px 4px 0px 0px rgba(0,0,0,1)}
+    .rough-shadow-lg{box-shadow:8px 8px 0px 0px rgba(0,0,0,1)}
+    .rough-button:active{box-shadow:none;transform:translate(4px,4px)}
+    .paper-stack{position:relative}
+    .paper-stack::before{content:'';position:absolute;top:4px;left:-4px;right:4px;bottom:-4px;border:4px solid #000;background:#2b363d;z-index:-1;transform:rotate(-1deg)}
+    .error-msg{background:#93000a;color:#ffdad6;border:2px solid black}
+    ::selection{background:#ffd23f;color:black}
+    .msg-bubble{max-width:75%;word-wrap:break-word}
+    .msg-own{margin-left:auto}
+    .msg-other{margin-right:auto}
+    #chat-scroll{scroll-behavior:smooth}
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg">
+
+<%- include('partials/header') %>
+
+<main class="flex-1 px-gutter py-margin max-w-container-max mx-auto w-full flex flex-col" style="height:calc(100vh - 140px)">
+
+  <div class="flex items-center justify-between mb-chunky-gap">
+    <h1 class="font-headline-md text-2xl text-primary-container">
+      <span class="material-symbols-outlined align-middle mr-2">chat</span>CHAT DE SALA
+    </h1>
+    <div class="flex items-center gap-unit">
+      <span class="w-3 h-3 bg-green-500 rounded-full inline-block"></span>
+      <span class="font-body-sm text-on-surface-variant" id="online-count">0 en línea</span>
+    </div>
+  </div>
+
+  <div class="flex-1 bg-surface-container-high rough-border rough-shadow flex flex-col overflow-hidden">
+
+    <div id="chat-scroll" class="flex-1 overflow-y-auto p-4 flex flex-col gap-unit">
+      <div class="text-center py-4">
+        <p class="font-body-sm text-on-surface-variant">Los mensajes aparecerán aquí</p>
+      </div>
+    </div>
+
+    <div class="border-t-4 border-black p-3 bg-surface-container-low">
+      <form id="chat-form" class="flex gap-unit">
+        <input type="text" id="chat-input" maxlength="200" placeholder="Escribe un mensaje..."
+               class="flex-1 bg-surface-container-lowest rough-border px-4 py-3 text-on-surface font-body-lg focus:outline-none focus:ring-2 focus:ring-primary-container placeholder-on-surface-variant"/>
+        <button type="submit" id="btn-send" class="rough-border rough-shadow rough-button bg-primary-container text-on-primary-container font-label-bold px-5 py-3 uppercase">
+          <span class="material-symbols-outlined align-middle mr-1">send</span>Enviar
+        </button>
+      </form>
+      <div class="flex justify-between mt-1 px-1">
+        <span class="font-bilingual-sub text-on-surface-variant">Máx. 200 caracteres</span>
+        <span class="font-bilingual-sub text-on-surface-variant" id="char-count">0/200</span>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function() {
+  var socket = io();
+  var chatScroll = document.getElementById('chat-scroll');
+  var chatForm = document.getElementById('chat-form');
+  var chatInput = document.getElementById('chat-input');
+  var charCount = document.getElementById('char-count');
+  var onlineCount = document.getElementById('online-count');
+  var currentPlayer = '<%= typeof playerName !== "undefined" ? playerName : "Anónimo" %>';
+
+  function sanitize(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function formatTime(date) {
+    var h = date.getHours().toString().padStart(2, '0');
+    var m = date.getMinutes().toString().padStart(2, '0');
+    return h + ':' + m;
+  }
+
+  function appendMessage(data) {
+    var isOwn = data.player === currentPlayer;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'flex flex-col ' + (isOwn ? 'msg-own items-end' : 'msg-other items-start');
+
+    var meta = document.createElement('div');
+    meta.className = 'flex items-center gap-unit mb-1';
+    if (!isOwn) {
+      var av = document.createElement('span');
+      av.className = 'text-lg';
+      av.textContent = data.avatar || '😎';
+      meta.appendChild(av);
+    }
+    var name = document.createElement('span');
+    name.className = 'font-label-bold text-sm ' + (isOwn ? 'text-secondary' : 'text-primary-container');
+    name.textContent = data.player;
+    meta.appendChild(name);
+    var time = document.createElement('span');
+    time.className = 'font-bilingual-sub text-on-surface-variant';
+    time.textContent = formatTime(new Date());
+    meta.appendChild(time);
+    wrapper.appendChild(meta);
+
+    var bubble = document.createElement('div');
+    bubble.className = 'msg-bubble rough-border px-3 py-2 ' + (isOwn ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container text-on-surface');
+    bubble.textContent = data.message;
+    wrapper.appendChild(bubble);
+
+    var placeholder = chatScroll.querySelector('.text-center');
+    if (placeholder) placeholder.remove();
+
+    chatScroll.appendChild(wrapper);
+    chatScroll.scrollTop = chatScroll.scrollHeight;
+  }
+
+  chatInput.addEventListener('input', function() {
+    var len = chatInput.value.length;
+    charCount.textContent = len + '/200';
+    if (len >= 190) {
+      charCount.classList.add('text-error');
+    } else {
+      charCount.classList.remove('text-error');
+    }
+  });
+
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var msg = chatInput.value.trim();
+    if (!msg || msg.length > 200) return;
+    socket.emit('chat_message', { message: msg });
+    chatInput.value = '';
+    charCount.textContent = '0/200';
+    chatInput.focus();
+  });
+
+  socket.on('chat_message', function(data) {
+    var sanitized = {
+      player: sanitize(data.player || 'Anónimo'),
+      message: sanitize(data.message || ''),
+      avatar: data.avatar || '😎'
+    };
+    appendMessage(sanitized);
+  });
+
+  socket.on('users_online', function(data) {
+    onlineCount.textContent = (data.count || 0) + ' en línea';
+  });
+})();
+</script>
+
+</body>
+</html>
